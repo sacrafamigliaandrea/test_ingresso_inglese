@@ -1,0 +1,1505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Entry Test A.s. 2026-2027</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --uk-blue:#012169;
+    --uk-blue-deep:#000F4D;
+    --uk-blue-light:#E6EBF5;
+    --uk-red:#C8102E;
+    --uk-red-deep:#A40A24;
+    --uk-white:#FFFFFF;
+    --grigio:#5A5F6B;
+    --grigio-soft:#8A8E99;
+    --grigio-bg:#F4F5F8;
+    --bordo:#D7DBE3;
+    --verde:#2E7D4F;
+    --rosso-err:#B14444;
+    --ambra:#C77A0A;
+    --ombra:0 2px 10px rgba(1,33,105,.08);
+    --ombra-md:0 8px 24px rgba(1,33,105,.15);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:'Atkinson Hyperlegible',system-ui,sans-serif;
+    background:var(--grigio-bg);
+    color:#1a1a1a;
+    line-height:1.55;
+    font-size:16px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1200px;margin:0 auto;padding:24px}
+
+  /* HEADER */
+  header.topbar{
+    position:relative;background:var(--uk-blue);color:var(--uk-white);
+    padding:22px 32px;border-radius:14px 14px 0 0;
+    display:flex;align-items:center;gap:20px;
+    box-shadow:var(--ombra);overflow:hidden;
+  }
+  header.topbar::before{
+    content:'';position:absolute;inset:0;
+    background-image:
+      linear-gradient(45deg, transparent 48%, rgba(255,255,255,.04) 48%, rgba(255,255,255,.04) 52%, transparent 52%),
+      linear-gradient(-45deg, transparent 48%, rgba(200,16,46,.06) 48%, rgba(200,16,46,.06) 52%, transparent 52%);
+    background-size:80px 80px;pointer-events:none;
+  }
+  .logo{
+    width:58px;height:58px;border-radius:50%;
+    background:var(--uk-white);
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,.15);z-index:1;
+  }
+  .logo svg{width:40px;height:40px}
+  .header-text{z-index:1}
+  .school{font-size:.82rem;letter-spacing:.06em;opacity:.85;text-transform:uppercase;font-weight:700}
+  .title-test{font-size:1.45rem;font-weight:700;line-height:1.2;margin-top:4px;font-family:'EB Garamond',serif}
+  .badge-anno{
+    margin-left:auto;background:var(--uk-red);
+    padding:8px 16px;border-radius:24px;
+    font-size:.88rem;font-weight:700;z-index:1;letter-spacing:.03em;
+    box-shadow:0 2px 6px rgba(200,16,46,.3);
+  }
+  .uk-strip{height:6px;display:flex;border-radius:0 0 14px 14px;overflow:hidden;box-shadow:var(--ombra)}
+  .uk-strip .s1{flex:1;background:var(--uk-white);border-top:1px solid var(--bordo)}
+  .uk-strip .s2{flex:1;background:var(--uk-red)}
+  .uk-strip .s3{flex:1;background:var(--uk-blue)}
+
+  .screen{display:none;margin-top:24px}
+  .screen.active{display:block;animation:fade .4s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .card{
+    background:var(--uk-white);border-radius:14px;padding:36px 40px;
+    box-shadow:var(--ombra-md);border:1px solid var(--bordo);
+  }
+  h2.step-title{
+    font-size:1.7rem;color:var(--uk-blue);
+    border-bottom:3px solid var(--uk-blue-light);
+    padding-bottom:14px;margin-bottom:26px;
+    display:flex;align-items:center;gap:14px;
+    font-family:'EB Garamond',serif;font-weight:500;
+  }
+  .step-num{
+    background:var(--uk-blue);color:var(--uk-white);
+    width:40px;height:40px;border-radius:50%;
+    display:inline-flex;align-items:center;justify-content:center;
+    font-size:1.1rem;font-weight:700;flex-shrink:0;
+    font-family:'Atkinson Hyperlegible',sans-serif;
+    box-shadow:0 3px 8px rgba(1,33,105,.25);
+  }
+  .subtitle{
+    color:var(--grigio);font-size:1rem;
+    margin-top:-18px;margin-bottom:24px;
+  }
+
+  /* STUDENT PICKER */
+  .student-picker{
+    position:relative;
+  }
+  .student-picker input{
+    width:100%;padding:16px 18px;
+    border:2px solid var(--bordo);border-radius:10px;
+    font-family:inherit;font-size:1.1rem;font-weight:700;
+    background:var(--uk-white);
+    transition:border-color .2s, box-shadow .2s;
+  }
+  .student-picker input:focus{
+    outline:none;border-color:var(--uk-blue);
+    box-shadow:0 0 0 4px var(--uk-blue-light);
+  }
+  .student-picker .results{
+    position:absolute;top:100%;left:0;right:0;
+    background:var(--uk-white);
+    border:2px solid var(--uk-blue);
+    border-radius:10px;
+    margin-top:4px;
+    max-height:320px;overflow-y:auto;
+    box-shadow:var(--ombra-md);
+    z-index:10;
+    display:none;
+  }
+  .student-picker .results.open{display:block}
+  .student-picker .result-item{
+    padding:12px 18px;
+    cursor:pointer;
+    border-bottom:1px solid var(--uk-blue-light);
+    display:flex;align-items:center;justify-content:space-between;
+    transition:background .15s;
+    font-size:1.02rem;
+  }
+  .student-picker .result-item:last-child{border-bottom:none}
+  .student-picker .result-item:hover,
+  .student-picker .result-item.active{background:var(--uk-blue-light)}
+  .badge-plays{
+    background:var(--uk-blue);color:var(--uk-white);
+    padding:4px 10px;border-radius:14px;
+    font-size:.78rem;font-weight:700;
+  }
+  .badge-plays.plays-3{background:var(--uk-red)}
+
+  .student-selected{
+    background:linear-gradient(135deg, #EBF7F0 0%, #DCEFE3 100%);
+    border:2px solid var(--verde);
+    border-radius:10px;
+    padding:16px 22px;
+    margin-top:16px;
+    display:flex;align-items:center;justify-content:space-between;
+    gap:14px;flex-wrap:wrap;
+  }
+  .student-selected .ic-check{
+    background:var(--verde);color:#fff;
+    width:32px;height:32px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
+  }
+  .student-selected .info{flex:1;min-width:200px}
+  .student-selected .name{font-weight:700;font-size:1.1rem;color:#1a1a1a}
+  .student-selected .meta{font-size:.88rem;color:var(--grigio);margin-top:2px}
+  .student-selected button{
+    background:transparent;border:1.5px solid var(--verde);color:var(--verde);
+    padding:6px 14px;border-radius:8px;
+    font-family:inherit;font-weight:700;font-size:.88rem;
+    cursor:pointer;
+  }
+  .student-selected button:hover{background:var(--verde);color:#fff}
+
+  /* PULSANTI */
+  .btn-row{display:flex;justify-content:space-between;align-items:center;margin-top:32px;gap:16px;flex-wrap:wrap}
+  button.btn{
+    font-family:inherit;font-size:1.05rem;font-weight:700;
+    padding:14px 30px;border-radius:10px;border:none;cursor:pointer;
+    transition:transform .15s, box-shadow .15s, background .2s;
+    display:inline-flex;align-items:center;gap:10px;min-height:52px;
+  }
+  .btn-primary{background:var(--uk-blue);color:var(--uk-white);box-shadow:0 3px 10px rgba(1,33,105,.25)}
+  .btn-primary:hover:not(:disabled){background:var(--uk-blue-deep);transform:translateY(-2px);box-shadow:var(--ombra-md)}
+  .btn-secondary{background:var(--uk-white);color:var(--uk-blue);border:2px solid var(--uk-blue)}
+  .btn-secondary:hover:not(:disabled){background:var(--uk-blue-light)}
+  .btn-red{background:var(--uk-red);color:var(--uk-white);box-shadow:0 3px 10px rgba(200,16,46,.3)}
+  .btn-red:hover:not(:disabled){background:var(--uk-red-deep);transform:translateY(-2px);box-shadow:0 6px 16px rgba(200,16,46,.35)}
+  button.btn:disabled{opacity:.5;cursor:not-allowed}
+
+  /* ISTRUZIONI */
+  .istruzioni{
+    background:var(--uk-blue-light);
+    border-left:5px solid var(--uk-blue);
+    padding:18px 24px;border-radius:0 10px 10px 0;
+    margin-bottom:24px;font-size:1rem;line-height:1.6;
+  }
+  .istruzioni strong{color:var(--uk-blue)}
+  .alert{
+    background:#FFF5E5;border-left:5px solid var(--ambra);
+    padding:14px 20px;border-radius:0 10px 10px 0;
+    font-size:.95rem;margin-top:16px;
+    display:flex;align-items:flex-start;gap:12px;
+  }
+  .alert strong{color:var(--ambra)}
+  .alert .ic{flex-shrink:0;margin-top:2px;color:var(--ambra)}
+
+  /* AUDIO MINIMAL PLAYER */
+  .audio-block{
+    background:linear-gradient(145deg, var(--uk-blue) 0%, var(--uk-blue-deep) 100%);
+    border-radius:14px;padding:22px 26px;
+    margin:24px 0;color:var(--uk-white);
+    position:relative;overflow:hidden;box-shadow:var(--ombra-md);
+  }
+  /* Sticky frame durante l'esercizio audio */
+  #screen-2 .audio-block,
+  #screen-3 .audio-block{
+    position:sticky;
+    top:8px;
+    z-index:5;
+    box-shadow:0 10px 30px rgba(1,33,105,.25);
+  }
+  .audio-block::before{
+    content:'';position:absolute;inset:0;
+    background-image:linear-gradient(45deg, transparent 48%, rgba(255,255,255,.03) 48%, rgba(255,255,255,.03) 52%, transparent 52%);
+    background-size:60px 60px;pointer-events:none;
+  }
+  .audio-row{
+    display:flex;align-items:center;gap:18px;
+    position:relative;z-index:1;flex-wrap:wrap;
+  }
+  .speaker-icon{
+    width:48px;height:48px;border-radius:50%;
+    background:rgba(255,255,255,.12);
+    border:2px solid rgba(255,255,255,.25);
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;transition:background .3s;
+  }
+  .speaker-icon.playing{
+    background:var(--uk-red);border-color:var(--uk-red);
+    animation:pulseSpeaker 1.5s infinite;
+  }
+  @keyframes pulseSpeaker{
+    0%,100%{box-shadow:0 0 0 0 rgba(200,16,46,.6)}
+    50%{box-shadow:0 0 0 10px rgba(200,16,46,0)}
+  }
+  .speaker-icon svg{width:24px;height:24px}
+  .audio-info{flex:1;min-width:240px}
+  .audio-label{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;opacity:.7;font-weight:700}
+  .audio-title{font-size:1.15rem;font-weight:700;margin-top:2px;font-family:'EB Garamond',serif}
+  .progress-bar{
+    width:100%;height:6px;
+    background:rgba(255,255,255,.15);
+    border-radius:3px;overflow:hidden;
+    margin-top:10px;
+  }
+  .progress-fill{
+    height:100%;background:var(--uk-white);
+    width:0%;transition:width .25s linear;
+    border-radius:3px;
+  }
+  .audio-time{
+    font-size:.92rem;font-weight:700;
+    margin-top:6px;opacity:.9;
+    font-variant-numeric:tabular-nums;
+  }
+  .play-counter{
+    background:rgba(255,255,255,.12);
+    border:2px solid rgba(255,255,255,.25);
+    padding:8px 14px;border-radius:24px;
+    font-size:.88rem;font-weight:700;
+    display:inline-flex;align-items:center;gap:8px;
+  }
+  .play-counter .dots{display:flex;gap:5px}
+  .play-counter .dot{
+    width:10px;height:10px;border-radius:50%;
+    background:rgba(255,255,255,.3);transition:background .3s;
+  }
+  .play-counter .dot.used{background:var(--uk-red);box-shadow:0 0 6px rgba(200,16,46,.6)}
+  .play-counter .dot.current{background:var(--uk-white);animation:pulse 1.5s infinite}
+  @keyframes pulse{
+    0%,100%{box-shadow:0 0 0 0 rgba(255,255,255,.7)}
+    50%{box-shadow:0 0 0 5px rgba(255,255,255,0)}
+  }
+  .audio-status{
+    margin-top:14px;
+    font-size:.95rem;opacity:.85;
+    position:relative;z-index:1;
+    min-height:22px;
+  }
+  .start-row{
+    display:flex;justify-content:center;
+    margin-top:18px;position:relative;z-index:1;
+  }
+  .btn-start-audio{
+    background:var(--uk-red);color:var(--uk-white);
+    padding:14px 32px;border:none;border-radius:10px;
+    font-family:inherit;font-weight:700;font-size:1.05rem;
+    cursor:pointer;
+    display:inline-flex;align-items:center;gap:10px;
+    transition:transform .15s, box-shadow .15s, background .2s;
+    box-shadow:0 4px 12px rgba(200,16,46,.4);
+    min-height:52px;
+  }
+  .btn-start-audio:hover:not(:disabled){background:var(--uk-red-deep);transform:translateY(-2px)}
+  .btn-start-audio:disabled{opacity:.5;cursor:not-allowed}
+  .btn-start-audio.completed{background:var(--verde);cursor:default}
+
+  .player-hidden{position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;opacity:0;pointer-events:none}
+
+  /* EX1 - MATCHING con dropdown a testo completo */
+  .q-match{
+    display:flex;align-items:center;gap:18px;
+    padding:18px 22px;background:var(--uk-white);
+    border:2px solid var(--bordo);border-radius:12px;
+    margin-bottom:12px;flex-wrap:wrap;
+    transition:border-color .2s, box-shadow .2s;
+  }
+  .q-match:focus-within{border-color:var(--uk-blue);box-shadow:0 0 0 4px var(--uk-blue-light)}
+  .q-match.example{background:linear-gradient(135deg, #FFF4F5 0%, #FCE9EC 100%);border-color:var(--uk-red)}
+  .q-num{
+    background:var(--uk-blue);color:var(--uk-white);
+    width:38px;height:38px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-weight:700;flex-shrink:0;font-size:1.05rem;
+    box-shadow:0 2px 6px rgba(1,33,105,.2);
+  }
+  .q-match.example .q-num{background:var(--uk-red);box-shadow:0 2px 6px rgba(200,16,46,.3)}
+  .q-text{flex:1;min-width:200px;font-size:1.05rem}
+  .q-match select{
+    min-width:200px;padding:12px 16px;
+    font-family:inherit;font-weight:700;font-size:1rem;
+    color:var(--uk-blue);background:var(--uk-blue-light);
+    border:2px solid var(--uk-blue);border-radius:8px;cursor:pointer;
+  }
+  .q-match select:focus{outline:none;box-shadow:0 0 0 4px var(--uk-blue-light)}
+  .q-match.example .ex-tag{
+    background:var(--uk-red);color:#fff;
+    padding:10px 18px;border-radius:8px;font-weight:700;font-size:.98rem;
+  }
+
+  /* EX2 / EX3 - MULTIPLE CHOICE */
+  .q-mc{
+    background:var(--uk-white);
+    border:2px solid var(--bordo);border-radius:12px;
+    padding:22px 26px;margin-bottom:14px;
+    transition:border-color .2s, box-shadow .2s;
+  }
+  .q-mc:focus-within{border-color:var(--uk-blue);box-shadow:0 0 0 4px var(--uk-blue-light)}
+  .q-mc.example{background:linear-gradient(135deg, #FFF4F5 0%, #FCE9EC 100%);border-color:var(--uk-red)}
+  .q-mc-head{display:flex;align-items:flex-start;gap:14px;margin-bottom:14px}
+  .q-mc-head .q-num{margin-top:0}
+  .q-mc-head .q-text{font-weight:700;font-size:1.1rem;flex:1}
+  .q-mc.example .q-num{background:var(--uk-red);box-shadow:0 2px 6px rgba(200,16,46,.3)}
+  .q-mc-image{
+    margin:0 0 16px 52px;
+    max-width:380px;
+    border-radius:10px;
+    overflow:hidden;
+    border:1px solid var(--bordo);
+    box-shadow:var(--ombra);
+  }
+  .q-mc-image img{width:100%;display:block;height:auto}
+  .mc-options{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-left:52px}
+  .mc-option{
+    display:flex;align-items:center;gap:12px;
+    padding:14px 18px;
+    background:#FAFBFE;border:2px solid var(--bordo);border-radius:10px;
+    cursor:pointer;transition:all .15s;
+    font-size:1.02rem;min-height:52px;
+  }
+  .mc-option:hover{border-color:var(--uk-blue);background:var(--uk-blue-light)}
+  .mc-option input[type=radio]{
+    appearance:none;-webkit-appearance:none;
+    width:22px;height:22px;
+    border:2.5px solid var(--bordo);border-radius:50%;
+    cursor:pointer;flex-shrink:0;position:relative;
+  }
+  .mc-option input[type=radio]:checked{border-color:var(--uk-blue)}
+  .mc-option input[type=radio]:checked::after{
+    content:'';position:absolute;top:3px;left:3px;
+    width:12px;height:12px;background:var(--uk-blue);border-radius:50%;
+  }
+  .mc-option:has(input:checked){background:var(--uk-blue-light);border-color:var(--uk-blue);font-weight:700}
+  .mc-letter{
+    background:var(--uk-blue);color:var(--uk-white);
+    width:30px;height:30px;border-radius:6px;
+    display:flex;align-items:center;justify-content:center;
+    font-weight:700;font-size:.92rem;flex-shrink:0;
+  }
+  .q-mc.example .mc-option.correct-example{background:var(--uk-red);color:#fff;border-color:var(--uk-red);font-weight:700}
+  .q-mc.example .mc-option.correct-example .mc-letter{background:#fff;color:var(--uk-red)}
+
+  /* EX3 - SEZIONI */
+  .ex3-section{
+    margin-bottom:32px;padding-bottom:18px;
+    border-bottom:2px dashed var(--bordo);
+  }
+  .ex3-section:last-child{border-bottom:none}
+  .ex3-section h3{
+    color:var(--uk-blue);font-family:'EB Garamond',serif;
+    font-size:1.4rem;margin-bottom:18px;
+    display:flex;align-items:center;gap:12px;
+  }
+  .ex3-section h3 .sec-letter{
+    background:var(--uk-red);color:#fff;
+    width:34px;height:34px;border-radius:8px;
+    display:inline-flex;align-items:center;justify-content:center;
+    font-size:1.1rem;font-weight:700;
+    font-family:'Atkinson Hyperlegible',sans-serif;
+  }
+
+  /* Invitation card shared image */
+  .shared-image{
+    margin:0 auto 24px;
+    max-width:480px;
+    border-radius:12px;overflow:hidden;
+    border:2px solid var(--bordo);
+    box-shadow:var(--ombra-md);
+  }
+  .shared-image img{width:100%;display:block;height:auto}
+
+  /* Brown bears matching */
+  .bears-block{
+    display:grid;grid-template-columns:1fr 280px;gap:24px;
+    align-items:start;
+  }
+  @media (max-width:900px){.bears-block{grid-template-columns:1fr}}
+  .bears-text{
+    background:linear-gradient(135deg, #FAFBFE 0%, #F0F3FA 100%);
+    border:2px solid var(--bordo);
+    border-radius:12px;padding:24px 28px;
+    font-size:1.08rem;line-height:2;
+  }
+  .bears-text h4{
+    font-family:'EB Garamond',serif;
+    color:var(--uk-blue);
+    font-size:1.3rem;
+    margin-bottom:12px;
+    letter-spacing:.05em;
+  }
+  .bears-image{
+    border-radius:12px;overflow:hidden;
+    border:1px solid var(--bordo);
+    box-shadow:var(--ombra);
+  }
+  .bears-image img{width:100%;display:block;height:auto}
+  .bears-blank{
+    display:inline-block;
+    margin:0 4px;
+  }
+  .bears-blank select{
+    padding:8px 14px;
+    font-family:inherit;font-weight:700;font-size:.95rem;
+    color:var(--uk-blue);background:var(--uk-blue-light);
+    border:2px solid var(--uk-blue);border-radius:8px;
+    cursor:pointer;min-width:180px;
+  }
+  .bears-blank .blank-num{
+    background:var(--uk-red);color:#fff;
+    padding:2px 8px;border-radius:6px;
+    font-size:.78rem;font-weight:700;
+    margin-right:6px;
+    vertical-align:middle;
+  }
+
+  /* PROGRESS */
+  .progress{display:flex;gap:10px;margin-top:24px;padding:0 4px}
+  .progress .pip{flex:1;height:8px;background:var(--bordo);border-radius:4px;transition:background .3s}
+  .progress .pip.done{background:var(--verde)}
+  .progress .pip.active{background:var(--uk-red)}
+
+  /* RISULTATI */
+  .result-banner{
+    background:linear-gradient(135deg, var(--uk-blue) 0%, var(--uk-blue-deep) 100%);
+    color:var(--uk-white);border-radius:14px;
+    padding:40px;text-align:center;margin-bottom:26px;
+    position:relative;overflow:hidden;box-shadow:var(--ombra-md);
+  }
+  .result-banner::before{
+    content:'';position:absolute;inset:0;
+    background-image:
+      linear-gradient(45deg, transparent 48%, rgba(255,255,255,.04) 48%, rgba(255,255,255,.04) 52%, transparent 52%),
+      linear-gradient(-45deg, transparent 48%, rgba(200,16,46,.07) 48%, rgba(200,16,46,.07) 52%, transparent 52%);
+    background-size:80px 80px;pointer-events:none;
+  }
+  .result-banner > *{position:relative;z-index:1}
+  .result-score{font-size:4.5rem;font-weight:700;line-height:1;margin:18px 0 8px;font-family:'EB Garamond',serif}
+  .result-score .total{opacity:.5;font-size:2.5rem}
+  .result-label{font-size:.9rem;letter-spacing:.12em;text-transform:uppercase;opacity:.9;font-weight:700}
+  .result-msg{font-size:1.2rem;margin-top:18px;font-style:italic;font-family:'EB Garamond',serif}
+  .sub-scores{
+    display:flex;gap:18px;justify-content:center;flex-wrap:wrap;
+    margin-top:22px;
+  }
+  .sub-score{
+    background:rgba(255,255,255,.12);
+    border:1.5px solid rgba(255,255,255,.25);
+    padding:10px 22px;border-radius:24px;
+    font-size:.95rem;font-weight:700;
+  }
+  .sub-score .lbl{opacity:.75;font-size:.78rem;letter-spacing:.05em;text-transform:uppercase;display:block}
+  .sub-score .val{font-size:1.3rem;font-family:'EB Garamond',serif}
+  .review-section{margin-top:24px}
+  .review-section h3{
+    color:var(--uk-blue);font-size:1.25rem;margin-bottom:14px;
+    border-bottom:2px solid var(--uk-blue-light);padding-bottom:10px;
+    font-family:'EB Garamond',serif;
+  }
+  .review-item{
+    display:flex;align-items:center;gap:14px;
+    padding:12px 18px;border-radius:10px;
+    margin-bottom:8px;border:1.5px solid var(--bordo);
+  }
+  .review-item.correct{background:#EDF7F1;border-color:#A6D5B8}
+  .review-item.wrong{background:#FCEEEE;border-color:#E3B4B4}
+  .review-icon{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .review-icon svg{width:16px;height:16px}
+  .review-item.correct .review-icon{background:var(--verde);color:#fff}
+  .review-item.wrong .review-icon{background:var(--rosso-err);color:#fff}
+  .review-q{flex:1;font-size:.95rem}
+  .review-ans{font-weight:700;color:var(--grigio);font-size:.9rem}
+  .review-ans .your{color:var(--rosso-err)}
+  .review-ans .corr{color:var(--verde);margin-left:10px}
+
+  footer{text-align:center;margin-top:32px;padding:18px;font-size:.85rem;color:var(--grigio)}
+  .ic{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+  @media (max-width:768px){
+    .wrap{padding:12px}
+    .card{padding:22px}
+    h2.step-title{font-size:1.3rem}
+    .result-score{font-size:3rem}
+    .title-test{font-size:1.05rem}
+    .mc-options{grid-template-columns:1fr;margin-left:0}
+    .q-mc-image{margin-left:0;max-width:100%}
+    header.topbar{padding:16px 18px;gap:14px}
+    .logo{width:46px;height:46px}.logo svg{width:32px;height:32px}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header class="topbar">
+    <div class="logo">
+      <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+        <path d="M16 3 L4 9 L4 17 C4 23 9 28 16 30 C23 28 28 23 28 17 L28 9 Z" fill="#012169"/>
+        <text x="16" y="20" text-anchor="middle" font-family="Georgia,serif" font-size="11" font-weight="bold" fill="#fff">SF</text>
+      </svg>
+    </div>
+    <div class="header-text">
+      <div class="school">Scuola Sacra Famiglia · Orzinuovi</div>
+      <div class="title-test">Entry Test · A.s. 2026-2027</div>
+    </div>
+    <div class="badge-anno">English</div>
+  </header>
+  <div class="uk-strip"><div class="s1"></div><div class="s2"></div><div class="s3"></div></div>
+
+  <!-- ========== SCREEN 1 · STUDENT PICKER ========== -->
+  <section id="screen-1" class="screen active">
+    <div class="card">
+      <h2 class="step-title"><span class="step-num">1</span> Student selection</h2>
+
+      <div class="istruzioni">
+        <strong>Welcome.</strong> This Entry Test has three sections: two listening tasks and one reading comprehension.
+        Total score: <strong>26 points</strong>. Find your name in the list below to begin.
+      </div>
+
+      <div class="student-picker">
+        <input type="text" id="student-search" placeholder="Type your name (surname or first name)..." autocomplete="off">
+        <ul class="results" id="student-results"></ul>
+      </div>
+
+      <div id="student-selected-box" style="display:none"></div>
+
+      <div class="btn-row">
+        <div></div>
+        <button class="btn btn-red" id="btn-start" onclick="startTest()" disabled>
+          Start Test
+          <svg class="ic" viewBox="0 0 24 24"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== SCREEN 2 · EXERCISE 1 ========== -->
+  <section id="screen-2" class="screen">
+    <div class="card">
+      <h2 class="step-title"><span class="step-num">2</span> Exercise 1 · Birthday Party</h2>
+      <div class="subtitle">Listening · Matching · 5 points</div>
+
+      <div class="istruzioni">
+        Listen to a mum talking with her daughter. Match the first part of the sentences (1-5) with the second part.
+        <strong>There is one option that you do not need.</strong> The first one (0) is an example.
+      </div>
+
+      <div class="audio-block">
+        <div class="audio-row">
+          <div class="speaker-icon" id="speaker-1">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07"/></svg>
+          </div>
+          <div class="audio-info">
+            <div class="audio-label">Audio · Track 1</div>
+            <div class="audio-title">Birthday Party</div>
+            <div class="progress-bar"><div class="progress-fill" id="bar-1"></div></div>
+            <div class="audio-time"><span id="time-cur-1">0:00</span> / <span id="time-tot-1">0:00</span></div>
+          </div>
+          <div class="play-counter" id="counter-1">
+            <span>Listening:</span>
+            <div class="dots" id="dots-1"></div>
+          </div>
+        </div>
+        <div class="audio-status" id="status-1">Press Start to begin listening</div>
+        <div class="start-row">
+          <button class="btn-start-audio" id="play-1" onclick="startAudio(1)">
+            <svg class="ic" viewBox="0 0 24 24" style="fill:currentColor;stroke:none"><path d="M8 5v14l11-7z"/></svg>
+            Start listening
+          </button>
+        </div>
+        <div class="player-hidden" id="frame-1"></div>
+      </div>
+
+      <div class="q-match example">
+        <div class="q-num">0</div>
+        <div class="q-text">The party is for…</div>
+        <div class="ex-tag">Susan</div>
+      </div>
+
+      <div id="ex1-questions"></div>
+
+      <div class="progress"><div class="pip done"></div><div class="pip active"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="goToScreen(1)">
+          <svg class="ic" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          Back
+        </button>
+        <button class="btn btn-primary" onclick="nextExercise(1)">
+          Continue to Exercise 2
+          <svg class="ic" viewBox="0 0 24 24"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== SCREEN 3 · EXERCISE 2 ========== -->
+  <section id="screen-3" class="screen">
+    <div class="card">
+      <h2 class="step-title"><span class="step-num">3</span> Exercise 2 · Pet Discussion</h2>
+      <div class="subtitle">Listening · Multiple choice · 6 points</div>
+
+      <div class="istruzioni">
+        Listen to the conversation between a father and his daughter. Choose the correct answer (A, B, C or D) for questions 1-6.
+        Only one answer is correct. The first one (0) is an example.
+      </div>
+
+      <div class="audio-block">
+        <div class="audio-row">
+          <div class="speaker-icon" id="speaker-2">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07"/></svg>
+          </div>
+          <div class="audio-info">
+            <div class="audio-label">Audio · Track 2</div>
+            <div class="audio-title">Pet Discussion</div>
+            <div class="progress-bar"><div class="progress-fill" id="bar-2"></div></div>
+            <div class="audio-time"><span id="time-cur-2">0:00</span> / <span id="time-tot-2">0:00</span></div>
+          </div>
+          <div class="play-counter" id="counter-2">
+            <span>Listening:</span>
+            <div class="dots" id="dots-2"></div>
+          </div>
+        </div>
+        <div class="audio-status" id="status-2">Press Start to begin listening</div>
+        <div class="start-row">
+          <button class="btn-start-audio" id="play-2" onclick="startAudio(2)">
+            <svg class="ic" viewBox="0 0 24 24" style="fill:currentColor;stroke:none"><path d="M8 5v14l11-7z"/></svg>
+            Start listening
+          </button>
+        </div>
+        <div class="player-hidden" id="frame-2"></div>
+      </div>
+
+      <div class="q-mc example">
+        <div class="q-mc-head">
+          <div class="q-num">0</div>
+          <div class="q-text">In the morning the girl was…</div>
+        </div>
+        <div class="mc-options">
+          <div class="mc-option"><span class="mc-letter">A</span>at the zoo</div>
+          <div class="mc-option correct-example"><span class="mc-letter">B</span>in a park</div>
+          <div class="mc-option"><span class="mc-letter">C</span>at school</div>
+          <div class="mc-option"><span class="mc-letter">D</span>in town</div>
+        </div>
+      </div>
+
+      <div id="ex2-questions"></div>
+
+      <div class="progress"><div class="pip done"></div><div class="pip done"></div><div class="pip active"></div><div class="pip"></div><div class="pip"></div></div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="goToScreen(2)">
+          <svg class="ic" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          Back
+        </button>
+        <button class="btn btn-primary" onclick="nextExercise(2)">
+          Continue to Exercise 3
+          <svg class="ic" viewBox="0 0 24 24"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== SCREEN 4 · EXERCISE 3 ========== -->
+  <section id="screen-4" class="screen">
+    <div class="card">
+      <h2 class="step-title"><span class="step-num">4</span> Exercise 3 · Reading Comprehension</h2>
+      <div class="subtitle">Reading · Multiple choice + matching · 15 points</div>
+
+      <div class="istruzioni">
+        Three sections: <strong>A.</strong> Classroom situations · <strong>B.</strong> The invitation card · <strong>C.</strong> Brown bears.
+        Read each prompt carefully and choose the best answer.
+      </div>
+
+      <!-- SEZIONE A -->
+      <div class="ex3-section">
+        <h3><span class="sec-letter">A</span> Classroom situations</h3>
+        <div id="ex3-secA"></div>
+      </div>
+
+      <!-- SEZIONE B -->
+      <div class="ex3-section">
+        <h3><span class="sec-letter">B</span> The invitation card</h3>
+        <div class="shared-image"><img id="img-invitation" alt="Invitation card"></div>
+        <div id="ex3-secB"></div>
+      </div>
+
+      <!-- SEZIONE C -->
+      <div class="ex3-section">
+        <h3><span class="sec-letter">C</span> Brown bears</h3>
+        <p style="margin-bottom:18px;color:var(--grigio);font-style:italic">
+          Read the text and fill in the 5 blanks. Choose one option per blank — one option will not be used.
+        </p>
+        <div class="bears-block">
+          <div class="bears-text">
+            <h4>BROWN BEARS</h4>
+            <p>
+              Brown bears are
+              <span class="bears-blank"><span class="blank-num">1</span>
+                <select data-bears="1"></select>
+              </span>.
+              They live in mountain forests and valleys of North America, Europe and Asia.
+              They sleep in
+              <span class="bears-blank"><span class="blank-num">2</span>
+                <select data-bears="2"></select>
+              </span>.
+              Brown bears can be 2.3 meters long and weight up to
+              <span class="bears-blank"><span class="blank-num">3</span>
+                <select data-bears="3"></select>
+              </span>.
+              They have round ears, long claws and
+              <span class="bears-blank"><span class="blank-num">4</span>
+                <select data-bears="4"></select>
+              </span>.
+              Brown bears can have different colours, too. They can be
+              <span class="bears-blank"><span class="blank-num">5</span>
+                <select data-bears="5"></select>
+              </span>.
+              Females are smaller than the males.
+            </p>
+          </div>
+          <div class="bears-image"><img id="img-bears" alt="Brown bears"></div>
+        </div>
+      </div>
+
+      <div class="progress"><div class="pip done"></div><div class="pip done"></div><div class="pip done"></div><div class="pip active"></div><div class="pip"></div></div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="goToScreen(3)">
+          <svg class="ic" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          Back
+        </button>
+        <button class="btn btn-red" onclick="submitTest()">
+          Submit test
+          <svg class="ic" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== SCREEN 5 · RESULTS ========== -->
+  <section id="screen-5" class="screen">
+    <div class="card">
+      <h2 class="step-title"><span class="step-num">5</span> Results</h2>
+
+      <div class="result-banner">
+        <div class="result-label">Total score</div>
+        <div class="result-score"><span id="score-final">0</span><span class="total">/26</span></div>
+        <div class="result-msg" id="result-msg">Well done!</div>
+        <div class="sub-scores">
+          <div class="sub-score"><span class="lbl">Ex.1</span><span class="val"><span id="score-ex1">0</span>/5</span></div>
+          <div class="sub-score"><span class="lbl">Ex.2</span><span class="val"><span id="score-ex2">0</span>/6</span></div>
+          <div class="sub-score"><span class="lbl">Ex.3</span><span class="val"><span id="score-ex3">0</span>/15</span></div>
+        </div>
+      </div>
+
+      <div id="review-container"></div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="window.print()">
+          <svg class="ic" viewBox="0 0 24 24"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v8H6z"/></svg>
+          Print
+        </button>
+        <button class="btn btn-primary" onclick="location.reload()">
+          New test
+          <svg class="ic" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1018-9 9 9 0 00-9 9zM3 4v5h5"/></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== SCREEN 6 · THANK YOU ========== -->
+  <section id="screen-6" class="screen">
+    <div class="card" style="text-align:center;padding:60px 32px">
+      <svg width="90" height="90" viewBox="0 0 24 24" fill="none" stroke="#012169" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:22px">
+        <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+      </svg>
+      <h2 style="color:var(--uk-blue);font-size:1.9rem;margin-bottom:14px;font-family:'EB Garamond',serif">Test submitted</h2>
+      <p style="font-size:1.1rem;color:var(--grigio);max-width:520px;margin:0 auto 22px">
+        Your test has been recorded successfully. Please wait for your teacher's feedback.
+      </p>
+      <div style="font-family:'EB Garamond',serif;font-style:italic;color:var(--grigio);font-size:1.05rem">
+        — Thank you for your work —
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  Scuola Sacra Famiglia · Orzinuovi · Entry Test A.s. 2026-2027 · Animatore Digitale
+</footer>
+
+<script>
+/* ============================================================
+   CONFIG — DA COMPILARE
+   ============================================================ */
+const CONFIG = {
+
+  // 'studente' = review visibile; 'docente' = solo conferma invio
+  modalita: 'studente',
+
+  // Endpoint Apps Script (vuoto = disattivato)
+  endpointAppsScript: '',
+
+  // BASE URL immagini esercizio 3.
+  // Locale: './' (file index.html accanto a 1.png, 2.png, ...)
+  // GitHub: 'https://raw.githubusercontent.com/USER/REPO/main/path/'
+  // GitHub Pages: 'https://USER.github.io/REPO/'
+  imagesBase: './',
+
+  // ID YouTube degli audio
+  audio: {
+    1: '89Y-ASL5ntI',
+    2: 'XkmtsznlSiU'
+  },
+
+  // ⚠️ RISPOSTE CORRETTE — Ex1 ed Ex2 da ascoltare; Ex3 pre-compilate (verifica)
+  rispostecorrette: {
+    ex1: { 1:'', 2:'', 3:'', 4:'', 5:'' },                                   // A-F (testo)
+    ex2: { 1:'', 2:'', 3:'', 4:'', 5:'', 6:'' },                              // A-D
+    ex3: {
+      1:'B',   // Sit down!
+      2:'D',   // Can I close the window, please?
+      3:'C',   // Look at the whiteboard!
+      4:'B',   // Can I use a dictionary?
+      5:'C',   // Don't talk!
+      6:'B',   // Andrew
+      7:'C',   // Saturday, 28th June
+      8:'D',   // Sunset Garden
+      9:'A',   // early afternoon
+      10:'B',  // hot dogs
+      11:'B',  // large mammals
+      12:'A',  // winter
+      13:'D',  // 680 kilos
+      14:'C',  // sharp teeth
+      15:'E'   // brown, black or red
+    }
+  },
+
+  // Domande Ex1 (matching audio Birthday Party)
+  domandeEx1: {
+    1: 'The date of the party is…',
+    2: 'The party is at the…',
+    3: 'The time of the party is…',
+    4: 'The girl wants to buy a…',
+    5: 'They are buying the present…'
+  },
+
+  // Opzioni Ex1 — A-F (G "Susan" è l'esempio, esclusa)
+  opzioniEx1: {
+    A:'park', B:'4:30', C:'tomorrow', D:'5:30',
+    E:'10th October', F:'T-shirt'
+  },
+
+  // Domande Ex2 (multiple choice audio Pet Discussion)
+  domandeEx2: {
+    1: { testo: "The name of the girl's friend is…",       opt: { A:'Pam', B:'Sam', C:'Ken', D:'Dan' } },
+    2: { testo: 'The girl wants to have a…',               opt: { A:'horse', B:'dog', C:'budgie', D:'rabbit' } },
+    3: { testo: "Her friend's pet has got…",               opt: { A:'two babies', B:'four babies', C:'six babies', D:'eight babies' } },
+    4: { testo: 'Their house is too…',                     opt: { A:'small', B:'low', C:'high', D:'big' } },
+    5: { testo: 'One problem with cats is that they…',     opt: { A:'live too long', B:'eat too much', C:'run after mice', D:'run after dogs' } },
+    6: { testo: 'Hamsters…',                               opt: { A:'are black', B:'climb trees', C:'need a lot of food', D:'live in a cage' } }
+  },
+
+  // Esercizio 3 — Sezione A: situazioni in classe (5 immagini)
+  ex3_secA: {
+    1: { img:'1.png', testo:'What does the teacher say to the student?',
+         opt:{ A:'Open the book!', B:'Sit down!', C:'Stand up!', D:'Close the door, please.' } },
+    2: { img:'2.png', testo:'What does the student ask to the teacher?',
+         opt:{ A:'Can I open the window, please?', B:'Can I use a dictionary?', C:'Can I go to the toilet, please?', D:'Can I close the window, please?' } },
+    3: { img:'3.png', testo:'What does the teacher say to the students?',
+         opt:{ A:'Sit down!', B:'Close your books!', C:'Look at the whiteboard!', D:'Shut up!' } },
+    4: { img:'4.png', testo:'What does the student ask to the teacher?',
+         opt:{ A:'Can I open the window, please?', B:'Can I use a dictionary?', C:'Can I go to the toilet, please?', D:'Can I close the window, please?' } },
+    5: { img:'5.png', testo:'What does the teacher say to the students?',
+         opt:{ A:'Speak up!', B:"Don't write!", C:"Don't talk!", D:"Don't read!" } }
+  },
+
+  // Esercizio 3 — Sezione B: invitation card (5 domande, stessa immagine 6.png)
+  ex3_secB_img: '6.png',
+  ex3_secB: {
+    6:  { testo:'Who is the birthday boy?',         opt:{ A:'Alice', B:'Andrew', C:'Sunset', D:'Garden' } },
+    7:  { testo:'When is the party?',               opt:{ A:"It's at Andrew's house.", B:"It's on Sunday, 28th June", C:"It's on Saturday, 28th June", D:"It's at Sunset Garden" } },
+    8:  { testo:'Where is the party?',              opt:{ A:"It's at Andrew's house.", B:"It's on Sunday, 28th June", C:"It's on Saturday, 28th June", D:"It's at Sunset Garden" } },
+    9:  { testo:'When does the party start?',       opt:{ A:'In the early afternoon.', B:'At midday', C:'At night', D:'In the evening' } },
+    10: { testo:'What do you eat at the party?',    opt:{ A:'sneakers', B:'hot dogs', C:'pizza', D:'sunflowers' } }
+  },
+
+  // Esercizio 3 — Sezione C: Brown Bears (matching 5 blank, 6 opzioni)
+  ex3_secC_img: '7.png',
+  opzioniBears: {
+    A:'winter', B:'large mammals', C:'sharp teeth',
+    D:'680 kilos', E:'brown, black or red', F:'body'
+  },
+
+  // Pausa tra un ascolto e l'altro (ms)
+  pausaTraAscolti: 2000,
+
+  // Lista studenti — formato: [nome, plays]
+  // 'plays' = 3 per BES/DSA (estratto dal file Elenco_studenti.xlsx)
+  studenti: [
+    ["Alberti Alessandro",2],["Anastasio Alice Francesca",2],["Archetti Ambramarie",2],
+    ["Bagaglio Achille",2],["Barnabò Giorgia",2],["Baronchelli Leonardo",2],
+    ["Bello Vittoria",2],["Bernardi Andrea",2],["Bersini Leonardo",2],
+    ["Bianchi Eva Maria",3],["Bisignano Leonardo",2],["Bonalda Gabriele",2],
+    ["Borin Grazia",2],["Bozza Luca",2],["Canini Lorenzo",2],
+    ["Carrera Davide Michele",2],["Casalini Martina",2],["Cattaneo Micaela",2],
+    ["Cheng Yu Chiara",2],["D'Angelo Cristian",3],["Ferrari Achille",2],
+    ["Ferrari Nicola Giovanni",2],["Ferrari Samuele",2],["Gadinelli Liam",3],
+    ["Galli Filippo",2],["Gatta Emma",3],["Guana Vittorio",2],
+    ["Guimaraes Migliorati Gianfranco",2],["Kumar Jashan",2],["Locatelli Raniero",2],
+    ["Losio Mia",2],["Magoni Carlo",2],["Magoni Leonardo",3],
+    ["Malusardi Thomas",2],["Mantovani Adrianna",2],["Marenda Francesco",2],
+    ["Martinelli Tommaso",2],["Migliorati Leonardo",2],["Moretti Petra",3],
+    ["Muca Alessandro",2],["Pagliari Eleonora",2],["Pagliari Irene",2],
+    ["Panizza Andrea",2],["Papa Zoe",2],["Pighetti Federico",2],
+    ["Pisati Leonardo",2],["Reyna Renteria Mia",2],["Riccardi Leonardo",2],
+    ["Ronda Giovanni",2],["Ronda Maria Giulia",2],["Rossoni Tommaso",2],
+    ["Rota Nicolas",2],["Roura Gonzales Mia De La Caridad",3],["Sbarbini Giovanni",2],
+    ["Scalvenzi Giovanni Leonardo",2],["Scandia Sofia",2],["Singh Awar",3],
+    ["Strano Luigi",2],["Terna Edoardo",2],["Torresani Greta",2],
+    ["Tosoni Eleonora",2],["Treccani Agata",2],["Varisco Emanuele",2],
+    ["Vezzoli Noemi",2],["Zacchetti Penelope",2],["Zamboni Riccardo",2],
+    ["Zucchi Viola",2]
+  ]
+};
+
+/* ============================================================
+   STATO
+   ============================================================ */
+const STATE = {
+  studente: null,         // { nome, plays }
+  played:  { 1: 0, 2: 0 },
+  inCorso: { 1: false, 2: false },
+  players: { 1: null, 2: null },
+  ytReady: false,
+  ytQueue: [],
+  timer:   { 1: null, 2: null },
+  risposte: { ex1:{}, ex2:{}, ex3:{} }
+};
+
+/* ============================================================
+   STUDENT PICKER (searchable autocomplete)
+   ============================================================ */
+const norm = s => s.toLowerCase().replace(/[àáâ]/g,'a').replace(/[èé]/g,'e').replace(/[ìí]/g,'i').replace(/[òó]/g,'o').replace(/[ùú]/g,'u').replace(/['’]/g,'');
+
+function initStudentPicker() {
+  const input = document.getElementById('student-search');
+  const results = document.getElementById('student-results');
+
+  function render(filter) {
+    const q = norm(filter || '');
+    const filtered = CONFIG.studenti.filter(s => !q || norm(s[0]).includes(q));
+    if (filtered.length === 0) {
+      results.innerHTML = '<li class="result-item" style="color:var(--grigio);font-style:italic;cursor:default">No student found</li>';
+      results.classList.add('open');
+      return;
+    }
+    results.innerHTML = filtered.slice(0, 60).map(([name, plays]) => `
+      <li class="result-item" data-name="${name.replace(/"/g,'&quot;')}" data-plays="${plays}">
+        <span>${name}</span>
+      </li>
+    `).join('');
+    results.classList.add('open');
+  }
+
+  input.addEventListener('focus', () => render(input.value));
+  input.addEventListener('input', () => render(input.value));
+  input.addEventListener('blur', () => setTimeout(() => results.classList.remove('open'), 200));
+
+  results.addEventListener('mousedown', e => {
+    const item = e.target.closest('.result-item');
+    if (!item || !item.dataset.name) return;
+    selectStudent(item.dataset.name, parseInt(item.dataset.plays, 10));
+  });
+}
+
+function selectStudent(name, plays) {
+  STATE.studente = { nome: name, plays: plays };
+  document.getElementById('student-search').style.display = 'none';
+  document.getElementById('student-results').classList.remove('open');
+
+  const box = document.getElementById('student-selected-box');
+  box.style.display = 'block';
+  box.innerHTML = `
+    <div class="student-selected">
+      <div class="ic-check">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>
+      </div>
+      <div class="info">
+        <div class="name">${name}</div>
+        <div class="meta">Number of listenings allowed: <strong>${plays}</strong>${plays===3 ? ' (extended)' : ''}</div>
+      </div>
+      <button onclick="resetStudent()">Change</button>
+    </div>
+  `;
+  document.getElementById('btn-start').disabled = false;
+}
+
+function resetStudent() {
+  STATE.studente = null;
+  document.getElementById('student-search').style.display = '';
+  document.getElementById('student-search').value = '';
+  document.getElementById('student-search').focus();
+  document.getElementById('student-selected-box').style.display = 'none';
+  document.getElementById('btn-start').disabled = true;
+}
+
+/* ============================================================
+   YOUTUBE IFRAME API
+   ============================================================ */
+const ytScript = document.createElement('script');
+ytScript.src = 'https://www.youtube.com/iframe_api';
+document.head.appendChild(ytScript);
+
+function onYouTubeIframeAPIReady() {
+  STATE.ytReady = true;
+  [1, 2].forEach(n => createPlayer(n));
+  STATE.ytQueue.forEach(fn => fn());
+  STATE.ytQueue = [];
+}
+
+function createPlayer(n) {
+  STATE.players[n] = new YT.Player('frame-' + n, {
+    height: '1', width: '1',
+    videoId: CONFIG.audio[n],
+    host: 'https://www.youtube.com',
+    playerVars: { rel:0, playsinline:1, modestbranding:1, controls:0, disablekb:1, fs:0, iv_load_policy:3 },
+    events: { 'onStateChange': (e) => onPlayerStateChange(n, e) }
+  });
+}
+
+function onPlayerStateChange(n, event) {
+  if (event.data === YT.PlayerState.ENDED) {
+    STATE.played[n]++;
+    renderDots(n);
+    stopTimer(n);
+
+    if (STATE.played[n] < STATE.studente.plays) {
+      setStatus(n, `Get ready — listening ${STATE.played[n] + 1} of ${STATE.studente.plays} starting…`);
+      setSpeakerPlaying(n, false);
+      // mantengo barra al 100% finché non riparte
+      document.getElementById('bar-' + n).style.width = '100%';
+
+      setTimeout(() => {
+        if (STATE.players[n] && STATE.players[n].seekTo) {
+          STATE.players[n].seekTo(0);
+          STATE.players[n].playVideo();
+        }
+      }, CONFIG.pausaTraAscolti);
+    } else {
+      STATE.inCorso[n] = false;
+      setSpeakerPlaying(n, false);
+      setStatus(n, 'Listening completed. Now answer the questions below.');
+      document.getElementById('bar-' + n).style.width = '100%';
+      const btn = document.getElementById('play-' + n);
+      btn.disabled = true;
+      btn.classList.add('completed');
+      btn.innerHTML = `<svg class="ic" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg> Listening completed`;
+    }
+  } else if (event.data === YT.PlayerState.PLAYING) {
+    setSpeakerPlaying(n, true);
+    setStatus(n, `Listening ${STATE.played[n] + 1} of ${STATE.studente.plays} — audio cannot be paused`);
+    renderDots(n);
+    startTimer(n);
+  }
+}
+
+function startAudio(n) {
+  if (STATE.inCorso[n] || STATE.played[n] >= STATE.studente.plays) return;
+  STATE.inCorso[n] = true;
+  const btn = document.getElementById('play-' + n);
+  btn.disabled = true;
+  btn.innerHTML = `<svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> Playing...`;
+
+  const action = () => {
+    if (STATE.players[n] && STATE.players[n].seekTo) {
+      STATE.players[n].seekTo(0);
+      STATE.players[n].playVideo();
+    }
+  };
+  if (STATE.ytReady) action();
+  else STATE.ytQueue.push(action);
+}
+
+function startTimer(n) {
+  stopTimer(n);
+  STATE.timer[n] = setInterval(() => {
+    const p = STATE.players[n];
+    if (!p || !p.getCurrentTime) return;
+    const cur = p.getCurrentTime();
+    const dur = p.getDuration();
+    document.getElementById('time-cur-' + n).textContent = fmt(cur);
+    document.getElementById('time-tot-' + n).textContent = fmt(dur);
+    if (dur > 0) {
+      document.getElementById('bar-' + n).style.width = (cur / dur * 100) + '%';
+    }
+  }, 250);
+}
+
+function stopTimer(n) {
+  if (STATE.timer[n]) { clearInterval(STATE.timer[n]); STATE.timer[n] = null; }
+}
+
+function fmt(s) {
+  if (!s || isNaN(s)) return '0:00';
+  const m = Math.floor(s / 60);
+  const sec = Math.floor(s % 60);
+  return m + ':' + sec.toString().padStart(2,'0');
+}
+
+function setSpeakerPlaying(n, on) {
+  const sp = document.getElementById('speaker-' + n);
+  if (on) sp.classList.add('playing'); else sp.classList.remove('playing');
+}
+
+function setStatus(n, msg) {
+  document.getElementById('status-' + n).textContent = msg;
+}
+
+function renderDots(n) {
+  const cont = document.getElementById('dots-' + n);
+  const max = STATE.studente ? STATE.studente.plays : 2;
+  let html = '';
+  for (let i = 0; i < max; i++) {
+    let cls = 'dot';
+    if (i < STATE.played[n]) cls += ' used';
+    else if (i === STATE.played[n] && STATE.inCorso[n]) cls += ' current';
+    html += `<span class="${cls}"></span>`;
+  }
+  cont.innerHTML = html;
+}
+
+/* ============================================================
+   NAVIGAZIONE
+   ============================================================ */
+function goToScreen(n) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + n).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function startTest() {
+  if (!STATE.studente) return;
+  renderDots(1);
+  renderDots(2);
+  goToScreen(2);
+}
+
+function nextExercise(from) {
+  if (STATE.players[from] && STATE.players[from].pauseVideo) STATE.players[from].pauseVideo();
+  if (from === 1) {
+    document.querySelectorAll('select[data-ex="1"]').forEach(sel => {
+      STATE.risposte.ex1[sel.dataset.q] = sel.value;
+    });
+  } else if (from === 2) {
+    for (let q = 1; q <= 6; q++) {
+      const sel = document.querySelector(`input[name="ex2-q${q}"]:checked`);
+      STATE.risposte.ex2[q] = sel ? sel.value : '';
+    }
+  }
+  goToScreen(from === 1 ? 3 : 4);
+}
+
+/* ============================================================
+   BUILDER EX1 (matching con testo intero nei dropdown)
+   ============================================================ */
+function buildEx1() {
+  const container = document.getElementById('ex1-questions');
+  const opzioniHtml = Object.entries(CONFIG.opzioniEx1)
+    .map(([k,v]) => `<option value="${k}">${v}</option>`).join('');
+  let html = '';
+  for (let q = 1; q <= 5; q++) {
+    html += `
+      <div class="q-match">
+        <div class="q-num">${q}</div>
+        <div class="q-text">${CONFIG.domandeEx1[q]}</div>
+        <select data-ex="1" data-q="${q}">
+          <option value="">— choose —</option>
+          ${opzioniHtml}
+        </select>
+      </div>
+    `;
+  }
+  container.innerHTML = html;
+}
+
+/* ============================================================
+   BUILDER EX2 (multiple choice)
+   ============================================================ */
+function buildEx2() {
+  const container = document.getElementById('ex2-questions');
+  let html = '';
+  for (let q = 1; q <= 6; q++) {
+    const dq = CONFIG.domandeEx2[q];
+    html += `
+      <div class="q-mc">
+        <div class="q-mc-head">
+          <div class="q-num">${q}</div>
+          <div class="q-text">${dq.testo}</div>
+        </div>
+        <div class="mc-options">
+          ${['A','B','C','D'].map(L => `
+            <label class="mc-option">
+              <input type="radio" name="ex2-q${q}" value="${L}">
+              <span class="mc-letter">${L}</span>${dq.opt[L]}
+            </label>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }
+  container.innerHTML = html;
+}
+
+/* ============================================================
+   BUILDER EX3 (3 sezioni)
+   ============================================================ */
+function buildEx3() {
+  // Sezione A
+  const secA = document.getElementById('ex3-secA');
+  let htmlA = '';
+  for (let q = 1; q <= 5; q++) {
+    const dq = CONFIG.ex3_secA[q];
+    htmlA += `
+      <div class="q-mc">
+        <div class="q-mc-head">
+          <div class="q-num">${q}</div>
+          <div class="q-text">${dq.testo}</div>
+        </div>
+        <div class="q-mc-image"><img src="${CONFIG.imagesBase}${dq.img}" alt="Question ${q}"></div>
+        <div class="mc-options">
+          ${['A','B','C','D'].map(L => `
+            <label class="mc-option">
+              <input type="radio" name="ex3-q${q}" value="${L}">
+              <span class="mc-letter">${L}</span>${dq.opt[L]}
+            </label>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }
+  secA.innerHTML = htmlA;
+
+  // Sezione B (invitation card)
+  document.getElementById('img-invitation').src = CONFIG.imagesBase + CONFIG.ex3_secB_img;
+  const secB = document.getElementById('ex3-secB');
+  let htmlB = '';
+  for (let q = 6; q <= 10; q++) {
+    const dq = CONFIG.ex3_secB[q];
+    htmlB += `
+      <div class="q-mc">
+        <div class="q-mc-head">
+          <div class="q-num">${q}</div>
+          <div class="q-text">${dq.testo}</div>
+        </div>
+        <div class="mc-options">
+          ${['A','B','C','D'].map(L => `
+            <label class="mc-option">
+              <input type="radio" name="ex3-q${q}" value="${L}">
+              <span class="mc-letter">${L}</span>${dq.opt[L]}
+            </label>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }
+  secB.innerHTML = htmlB;
+
+  // Sezione C (Brown Bears)
+  document.getElementById('img-bears').src = CONFIG.imagesBase + CONFIG.ex3_secC_img;
+  const opzioniBearsHtml = Object.entries(CONFIG.opzioniBears)
+    .map(([k,v]) => `<option value="${k}">${v}</option>`).join('');
+  document.querySelectorAll('select[data-bears]').forEach(sel => {
+    sel.innerHTML = '<option value="">— choose —</option>' + opzioniBearsHtml;
+  });
+}
+
+/* ============================================================
+   SUBMIT
+   ============================================================ */
+function submitTest() {
+  [1,2].forEach(n => { if (STATE.players[n] && STATE.players[n].pauseVideo) STATE.players[n].pauseVideo(); });
+
+  // Raccogli Ex3
+  for (let q = 1; q <= 10; q++) {
+    const sel = document.querySelector(`input[name="ex3-q${q}"]:checked`);
+    STATE.risposte.ex3[q] = sel ? sel.value : '';
+  }
+  document.querySelectorAll('select[data-bears]').forEach(sel => {
+    const blankNum = parseInt(sel.dataset.bears, 10);
+    STATE.risposte.ex3[10 + blankNum] = sel.value; // 11,12,13,14,15
+  });
+
+  const incompleto = checkIncomplete();
+  if (incompleto.length > 0) {
+    const ok = confirm(`You have ${incompleto.length} unanswered question(s):\n${incompleto.slice(0, 12).join(', ')}${incompleto.length > 12 ? '...' : ''}\n\nSubmit anyway?`);
+    if (!ok) return;
+  }
+
+  const result = calcola();
+  inviaDati(result);
+
+  if (CONFIG.modalita === 'docente') {
+    goToScreen(6);
+  } else {
+    mostraRisultati(result);
+    goToScreen(5);
+  }
+}
+
+function checkIncomplete() {
+  const v = [];
+  for (let q = 1; q <= 5; q++) if (!STATE.risposte.ex1[q]) v.push('Ex1-Q' + q);
+  for (let q = 1; q <= 6; q++) if (!STATE.risposte.ex2[q]) v.push('Ex2-Q' + q);
+  for (let q = 1; q <= 15; q++) if (!STATE.risposte.ex3[q]) v.push('Ex3-Q' + q);
+  return v;
+}
+
+function calcola() {
+  const dettaglio = { ex1: [], ex2: [], ex3: [] };
+  let p1 = 0, p2 = 0, p3 = 0;
+
+  for (let q = 1; q <= 5; q++) {
+    const data = STATE.risposte.ex1[q];
+    const corretta = CONFIG.rispostecorrette.ex1[q];
+    const ok = corretta && data === corretta;
+    if (ok) p1++;
+    dettaglio.ex1.push({ q, data, corretta, ok });
+  }
+  for (let q = 1; q <= 6; q++) {
+    const data = STATE.risposte.ex2[q];
+    const corretta = CONFIG.rispostecorrette.ex2[q];
+    const ok = corretta && data === corretta;
+    if (ok) p2++;
+    dettaglio.ex2.push({ q, data, corretta, ok });
+  }
+  for (let q = 1; q <= 15; q++) {
+    const data = STATE.risposte.ex3[q];
+    const corretta = CONFIG.rispostecorrette.ex3[q];
+    const ok = corretta && data === corretta;
+    if (ok) p3++;
+    dettaglio.ex3.push({ q, data, corretta, ok });
+  }
+
+  return { punti: p1+p2+p3, p1, p2, p3, totale: 26, dettaglio };
+}
+
+function mostraRisultati(R) {
+  document.getElementById('score-final').textContent = R.punti;
+  document.getElementById('score-ex1').textContent = R.p1;
+  document.getElementById('score-ex2').textContent = R.p2;
+  document.getElementById('score-ex3').textContent = R.p3;
+
+  const perc = (R.punti / R.totale) * 100;
+  let msg;
+  if      (perc >= 90) msg = 'Outstanding work — excellent English skills.';
+  else if (perc >= 75) msg = 'Very good performance. Keep it up.';
+  else if (perc >= 60) msg = 'Good effort. A few details to polish.';
+  else if (perc >= 40) msg = 'Promising start — practice makes perfect.';
+  else                 msg = 'Take your time — English is a skill you can train.';
+  document.getElementById('result-msg').textContent = msg;
+
+  const container = document.getElementById('review-container');
+  let html = '';
+
+  // EX1
+  html += '<div class="review-section"><h3>Exercise 1 · Birthday Party (Listening)</h3>';
+  R.dettaglio.ex1.forEach(r => {
+    const corretta = r.corretta ? CONFIG.opzioniEx1[r.corretta] || '—' : '—';
+    const datata = r.data ? CONFIG.opzioniEx1[r.data] || '—' : '— no answer';
+    html += renderReviewItem(r, CONFIG.domandeEx1[r.q], datata, corretta);
+  });
+  html += '</div>';
+
+  // EX2
+  html += '<div class="review-section"><h3>Exercise 2 · Pet Discussion (Listening)</h3>';
+  R.dettaglio.ex2.forEach(r => {
+    const opz = CONFIG.domandeEx2[r.q].opt;
+    const corretta = r.corretta ? `${r.corretta} · ${opz[r.corretta] || '—'}` : '—';
+    const datata = r.data ? `${r.data} · ${opz[r.data] || '—'}` : '— no answer';
+    html += renderReviewItem(r, CONFIG.domandeEx2[r.q].testo, datata, corretta);
+  });
+  html += '</div>';
+
+  // EX3
+  html += '<div class="review-section"><h3>Exercise 3 · Reading Comprehension</h3>';
+  R.dettaglio.ex3.forEach(r => {
+    let testo, opz;
+    if (r.q <= 5)      { testo = CONFIG.ex3_secA[r.q].testo; opz = CONFIG.ex3_secA[r.q].opt; }
+    else if (r.q <= 10){ testo = CONFIG.ex3_secB[r.q].testo; opz = CONFIG.ex3_secB[r.q].opt; }
+    else               { testo = 'Brown bears — blank ' + (r.q - 10); opz = CONFIG.opzioniBears; }
+    const corretta = r.corretta ? `${r.corretta} · ${opz[r.corretta] || '—'}` : '—';
+    const datata = r.data ? `${r.data} · ${opz[r.data] || '—'}` : '— no answer';
+    html += renderReviewItem(r, testo, datata, corretta);
+  });
+  html += '</div>';
+
+  container.innerHTML = html;
+}
+
+function renderReviewItem(r, testo, datata, corretta) {
+  return `
+    <div class="review-item ${r.ok ? 'correct' : 'wrong'}">
+      <div class="review-icon">
+        ${r.ok
+          ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>'
+          : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 6L6 18M6 6l12 12"/></svg>'}
+      </div>
+      <div class="review-q"><strong>Q${r.q}.</strong> ${testo}</div>
+      <div class="review-ans">
+        ${r.ok ? `<span class="corr">${corretta}</span>` :
+          `<span class="your">${datata}</span><span class="corr">→ ${corretta}</span>`}
+      </div>
+    </div>`;
+}
+
+/* ============================================================
+   APPS SCRIPT (image pixel)
+   ============================================================ */
+function inviaDati(R) {
+  if (!CONFIG.endpointAppsScript) return;
+  const payload = {
+    timestamp: new Date().toISOString(),
+    studente: STATE.studente.nome,
+    plays: STATE.studente.plays,
+    punteggio_tot: R.punti,
+    totale: R.totale,
+    punteggio_ex1: R.p1,
+    punteggio_ex2: R.p2,
+    punteggio_ex3: R.p3
+  };
+  for (let q = 1; q <= 5; q++) payload['ex1_q'+q] = STATE.risposte.ex1[q] || '';
+  for (let q = 1; q <= 6; q++) payload['ex2_q'+q] = STATE.risposte.ex2[q] || '';
+  for (let q = 1; q <= 15; q++) payload['ex3_q'+q] = STATE.risposte.ex3[q] || '';
+
+  try {
+    const params = new URLSearchParams(payload);
+    new Image().src = CONFIG.endpointAppsScript + '?' + params.toString();
+  } catch (e) { console.error('Errore invio:', e); }
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+document.addEventListener('DOMContentLoaded', () => {
+  initStudentPicker();
+  buildEx1();
+  buildEx2();
+  buildEx3();
+});
+</script>
+
+</body>
+</html>
