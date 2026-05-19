@@ -522,6 +522,23 @@
   .review-ans .corr{color:var(--verde);margin-left:10px}
 
   footer{text-align:center;margin-top:32px;padding:18px;font-size:.85rem;color:var(--grigio)}
+  .btn-dashboard{
+    display:inline-flex;align-items:center;gap:6px;
+    margin-top:14px;
+    background:transparent;color:var(--grigio);
+    text-decoration:none;
+    padding:8px 16px;
+    border:1.5px solid var(--bordo);
+    border-radius:8px;
+    font-size:.82rem;font-weight:700;
+    transition:all .2s;
+    font-family:inherit;
+  }
+  .btn-dashboard:hover{
+    background:var(--uk-blue-light);
+    border-color:var(--uk-blue);
+    color:var(--uk-blue);
+  }
   .ic{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 
   @media (max-width:768px){
@@ -635,7 +652,7 @@
           <svg class="ic" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
           Back
         </button>
-        <button class="btn btn-primary" onclick="nextExercise(1)">
+        <button class="btn btn-primary" id="btn-next-1" onclick="nextExercise(1)" disabled title="Complete all listenings first">
           Continue to Exercise 2
           <svg class="ic" viewBox="0 0 24 24"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
         </button>
@@ -702,7 +719,7 @@
           <svg class="ic" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
           Back
         </button>
-        <button class="btn btn-primary" onclick="nextExercise(2)">
+        <button class="btn btn-primary" id="btn-next-2" onclick="nextExercise(2)" disabled title="Complete all listenings first">
           Continue to Exercise 3
           <svg class="ic" viewBox="0 0 24 24"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
         </button>
@@ -838,6 +855,15 @@
 
 <footer>
   Scuola Sacra Famiglia · Orzinuovi · Entry Test A.s. 2026-2027 · Animatore Digitale
+  <div>
+    <a href="dashboard.html" class="btn-dashboard">
+      <svg style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round" viewBox="0 0 24 24">
+        <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+        <rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/>
+      </svg>
+      Dashboard docente
+    </a>
+  </div>
 </footer>
 
 <script>
@@ -850,7 +876,7 @@ const CONFIG = {
   modalita: 'studente',
 
   // Endpoint Apps Script (vuoto = disattivato)
-  endpointAppsScript: '',
+  endpointAppsScript: 'https://script.google.com/macros/s/AKfycbzJ9WtdyzjUT-lCRfQtxt2J4UiAwePIXc5XqV6XVfhSetbM-rpeawKpGN1hLVzWCTiP6A/exec',
 
   // BASE URL immagini esercizio 3.
   // Locale: './' (file index.html accanto a 1.png, 2.png, ...)
@@ -864,10 +890,10 @@ const CONFIG = {
     2: 'XkmtsznlSiU'
   },
 
-  // ⚠️ RISPOSTE CORRETTE — Ex1 ed Ex2 da ascoltare; Ex3 pre-compilate (verifica)
+  // ⚠️ RISPOSTE CORRETTE — Ex1/Ex2 IPOTIZZATE da contesto (verifica ascoltando)
   rispostecorrette: {
-    ex1: { 1:'', 2:'', 3:'', 4:'', 5:'' },                                   // A-F (testo)
-    ex2: { 1:'', 2:'', 3:'', 4:'', 5:'', 6:'' },                              // A-D
+    ex1: { 1:'E', 2:'A', 3:'B', 4:'F', 5:'C' },   // E:10th October, A:park, B:4:30, F:T-shirt, C:tomorrow (D:5:30 avanza)
+    ex2: { 1:'B', 2:'D', 3:'B', 4:'A', 5:'C', 6:'D' },  // Sam, rabbit, four babies, small, run after mice, live in a cage
     ex3: {
       1:'B',   // Sit down!
       2:'D',   // Can I close the window, please?
@@ -986,8 +1012,22 @@ const STATE = {
   ytReady: false,
   ytQueue: [],
   timer:   { 1: null, 2: null },
-  risposte: { ex1:{}, ex2:{}, ex3:{} }
+  risposte: { ex1:{}, ex2:{}, ex3:{} },
+  // Mappe shuffle per anti-copiatura. Ogni studente vede un ordine diverso.
+  shuffleMap: { ex1:null, ex2:{}, ex3A:{}, ex3B:{}, ex3C:null }
 };
+
+/* ============================================================
+   SHUFFLE (Fisher-Yates) — anti-copiatura
+   ============================================================ */
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
 
 /* ============================================================
    STUDENT PICKER (searchable autocomplete)
@@ -1107,6 +1147,12 @@ function onPlayerStateChange(n, event) {
       btn.disabled = true;
       btn.classList.add('completed');
       btn.innerHTML = `<svg class="ic" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg> Listening completed`;
+      // Abilita il pulsante Continue solo quando tutti gli ascolti sono finiti
+      const btnNext = document.getElementById('btn-next-' + n);
+      if (btnNext) {
+        btnNext.disabled = false;
+        btnNext.removeAttribute('title');
+      }
     }
   } else if (event.data === YT.PlayerState.PLAYING) {
     setSpeakerPlaying(n, true);
@@ -1216,9 +1262,10 @@ function nextExercise(from) {
    BUILDER EX1 (matching con testo intero nei dropdown)
    ============================================================ */
 function buildEx1() {
+  STATE.shuffleMap.ex1 = shuffle(['A','B','C','D','E','F']);
   const container = document.getElementById('ex1-questions');
-  const opzioniHtml = Object.entries(CONFIG.opzioniEx1)
-    .map(([k,v]) => `<option value="${k}">${v}</option>`).join('');
+  const opzioniHtml = STATE.shuffleMap.ex1
+    .map(L => `<option value="${L}">${CONFIG.opzioniEx1[L]}</option>`).join('');
   let html = '';
   for (let q = 1; q <= 5; q++) {
     html += `
@@ -1242,7 +1289,9 @@ function buildEx2() {
   const container = document.getElementById('ex2-questions');
   let html = '';
   for (let q = 1; q <= 6; q++) {
+    STATE.shuffleMap.ex2[q] = shuffle(['A','B','C','D']);
     const dq = CONFIG.domandeEx2[q];
+    const sh = STATE.shuffleMap.ex2[q];
     html += `
       <div class="q-mc">
         <div class="q-mc-head">
@@ -1250,12 +1299,15 @@ function buildEx2() {
           <div class="q-text">${dq.testo}</div>
         </div>
         <div class="mc-options">
-          ${['A','B','C','D'].map(L => `
-            <label class="mc-option">
-              <input type="radio" name="ex2-q${q}" value="${L}">
-              <span class="mc-letter">${L}</span>${dq.opt[L]}
-            </label>
-          `).join('')}
+          ${['A','B','C','D'].map((displayedL, i) => {
+            const origL = sh[i];
+            return `
+              <label class="mc-option">
+                <input type="radio" name="ex2-q${q}" value="${origL}">
+                <span class="mc-letter">${displayedL}</span>${dq.opt[origL]}
+              </label>
+            `;
+          }).join('')}
         </div>
       </div>
     `;
@@ -1267,11 +1319,13 @@ function buildEx2() {
    BUILDER EX3 (3 sezioni)
    ============================================================ */
 function buildEx3() {
-  // Sezione A
+  // Sezione A — shuffle per ogni domanda
   const secA = document.getElementById('ex3-secA');
   let htmlA = '';
   for (let q = 1; q <= 5; q++) {
+    STATE.shuffleMap.ex3A[q] = shuffle(['A','B','C','D']);
     const dq = CONFIG.ex3_secA[q];
+    const sh = STATE.shuffleMap.ex3A[q];
     htmlA += `
       <div class="q-mc">
         <div class="q-mc-head">
@@ -1280,24 +1334,29 @@ function buildEx3() {
         </div>
         <div class="q-mc-image"><img src="${CONFIG.imagesBase}${dq.img}" alt="Question ${q}"></div>
         <div class="mc-options">
-          ${['A','B','C','D'].map(L => `
-            <label class="mc-option">
-              <input type="radio" name="ex3-q${q}" value="${L}">
-              <span class="mc-letter">${L}</span>${dq.opt[L]}
-            </label>
-          `).join('')}
+          ${['A','B','C','D'].map((displayedL, i) => {
+            const origL = sh[i];
+            return `
+              <label class="mc-option">
+                <input type="radio" name="ex3-q${q}" value="${origL}">
+                <span class="mc-letter">${displayedL}</span>${dq.opt[origL]}
+              </label>
+            `;
+          }).join('')}
         </div>
       </div>
     `;
   }
   secA.innerHTML = htmlA;
 
-  // Sezione B (invitation card)
+  // Sezione B — invitation card (shuffle per ogni domanda)
   document.getElementById('img-invitation').src = CONFIG.imagesBase + CONFIG.ex3_secB_img;
   const secB = document.getElementById('ex3-secB');
   let htmlB = '';
   for (let q = 6; q <= 10; q++) {
+    STATE.shuffleMap.ex3B[q] = shuffle(['A','B','C','D']);
     const dq = CONFIG.ex3_secB[q];
+    const sh = STATE.shuffleMap.ex3B[q];
     htmlB += `
       <div class="q-mc">
         <div class="q-mc-head">
@@ -1305,22 +1364,26 @@ function buildEx3() {
           <div class="q-text">${dq.testo}</div>
         </div>
         <div class="mc-options">
-          ${['A','B','C','D'].map(L => `
-            <label class="mc-option">
-              <input type="radio" name="ex3-q${q}" value="${L}">
-              <span class="mc-letter">${L}</span>${dq.opt[L]}
-            </label>
-          `).join('')}
+          ${['A','B','C','D'].map((displayedL, i) => {
+            const origL = sh[i];
+            return `
+              <label class="mc-option">
+                <input type="radio" name="ex3-q${q}" value="${origL}">
+                <span class="mc-letter">${displayedL}</span>${dq.opt[origL]}
+              </label>
+            `;
+          }).join('')}
         </div>
       </div>
     `;
   }
   secB.innerHTML = htmlB;
 
-  // Sezione C (Brown Bears)
+  // Sezione C (Brown Bears) — shuffle ordine dropdown
   document.getElementById('img-bears').src = CONFIG.imagesBase + CONFIG.ex3_secC_img;
-  const opzioniBearsHtml = Object.entries(CONFIG.opzioniBears)
-    .map(([k,v]) => `<option value="${k}">${v}</option>`).join('');
+  STATE.shuffleMap.ex3C = shuffle(['A','B','C','D','E','F']);
+  const opzioniBearsHtml = STATE.shuffleMap.ex3C
+    .map(L => `<option value="${L}">${CONFIG.opzioniBears[L]}</option>`).join('');
   document.querySelectorAll('select[data-bears]').forEach(sel => {
     sel.innerHTML = '<option value="">— choose —</option>' + opzioniBearsHtml;
   });
