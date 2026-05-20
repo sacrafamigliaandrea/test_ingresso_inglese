@@ -170,6 +170,121 @@
   }
   .student-selected button:hover{background:var(--verde);color:#fff}
 
+  /* AGGIUNTA STUDENTE CUSTOM */
+  .add-custom-link{
+    margin-top:14px;text-align:center;
+  }
+  .add-custom-link a{
+    color:var(--uk-blue);text-decoration:none;
+    font-size:.9rem;font-weight:700;
+    border-bottom:1.5px dashed var(--uk-blue);
+    padding-bottom:2px;
+    cursor:pointer;
+    transition:color .2s;
+  }
+  .add-custom-link a:hover{color:var(--uk-red);border-color:var(--uk-red)}
+
+  .custom-form{
+    margin-top:14px;
+    background:linear-gradient(135deg, #FFF4F5 0%, #FCE9EC 100%);
+    border:2px solid var(--uk-red);
+    border-radius:12px;
+    padding:20px 24px;
+    display:none;
+  }
+  .custom-form.open{display:block;animation:fade .3s}
+  .custom-form h4{
+    color:var(--uk-red);font-size:1.05rem;
+    margin-bottom:14px;font-weight:700;
+    display:flex;align-items:center;gap:8px;
+  }
+  .custom-form .field{margin-bottom:12px}
+  .custom-form input[type=text]{
+    width:100%;padding:12px 16px;
+    border:2px solid var(--bordo);border-radius:10px;
+    font-family:inherit;font-size:1.05rem;font-weight:700;
+    background:#fff;
+  }
+  .custom-form input[type=text]:focus{
+    outline:none;border-color:var(--uk-red);
+    box-shadow:0 0 0 4px rgba(200,16,46,.12);
+  }
+  .custom-form label.checkbox{
+    display:flex;align-items:center;gap:10px;
+    cursor:pointer;font-size:.95rem;font-weight:700;
+    padding:10px 14px;background:#fff;
+    border:2px solid var(--bordo);border-radius:10px;
+    transition:all .15s;
+  }
+  .custom-form label.checkbox:hover{border-color:var(--uk-red);background:#FFF5F6}
+  .custom-form label.checkbox input{
+    appearance:none;-webkit-appearance:none;
+    width:20px;height:20px;
+    border:2px solid var(--bordo);border-radius:5px;
+    cursor:pointer;flex-shrink:0;position:relative;
+    transition:all .15s;
+  }
+  .custom-form label.checkbox input:checked{
+    background:var(--uk-red);border-color:var(--uk-red);
+  }
+  .custom-form label.checkbox input:checked::after{
+    content:'';position:absolute;left:5px;top:1px;
+    width:6px;height:11px;
+    border:solid #fff;border-width:0 2.5px 2.5px 0;
+    transform:rotate(45deg);
+  }
+  .custom-form .helper{
+    font-size:.82rem;color:var(--grigio);
+    margin-left:32px;margin-top:4px;
+  }
+  .custom-form .row-btns{
+    display:flex;gap:10px;margin-top:16px;
+  }
+  .custom-form button{
+    font-family:inherit;font-weight:700;font-size:.95rem;
+    padding:10px 18px;border-radius:8px;border:none;cursor:pointer;
+    min-height:42px;
+    display:inline-flex;align-items:center;gap:6px;
+  }
+  .custom-form .btn-confirm{background:var(--uk-red);color:#fff}
+  .custom-form .btn-confirm:hover{background:var(--uk-red-deep)}
+  .custom-form .btn-cancel{background:transparent;color:var(--grigio);border:1.5px solid var(--bordo)}
+  .custom-form .btn-cancel:hover{background:#F0F0F0}
+
+  /* PULSANTE TTS — visibile solo se body.tts-enabled */
+  .btn-tts{display:none}
+  body.tts-enabled .btn-tts{
+    display:inline-flex;align-items:center;justify-content:center;
+    background:var(--ambra);color:#fff;
+    width:34px;height:34px;border-radius:50%;
+    border:none;cursor:pointer;
+    transition:transform .15s, background .2s;
+    flex-shrink:0;
+    margin-left:8px;
+  }
+  body.tts-enabled .btn-tts:hover{background:#A06808;transform:scale(1.1)}
+  body.tts-enabled .btn-tts.speaking{
+    background:var(--verde);
+    animation:ttsPulse 1s infinite;
+  }
+  @keyframes ttsPulse{
+    0%,100%{box-shadow:0 0 0 0 rgba(46,125,79,.5)}
+    50%{box-shadow:0 0 0 8px rgba(46,125,79,0)}
+  }
+  .btn-tts svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
+  .btn-tts-bears{
+    display:none;
+    background:var(--ambra);color:#fff;
+    padding:10px 18px;border-radius:8px;border:none;cursor:pointer;
+    font-family:inherit;font-weight:700;font-size:.92rem;
+    margin-bottom:14px;
+    transition:background .2s;
+    align-items:center;gap:8px;
+  }
+  body.tts-enabled .btn-tts-bears{display:inline-flex}
+  .btn-tts-bears:hover{background:#A06808}
+  .btn-tts-bears.speaking{background:var(--verde)}
+
   /* PULSANTI */
   .btn-row{display:flex;justify-content:space-between;align-items:center;margin-top:32px;gap:16px;flex-wrap:wrap}
   button.btn{
@@ -590,6 +705,37 @@
 
       <div id="student-selected-box" style="display:none"></div>
 
+      <div class="add-custom-link" id="add-custom-link">
+        <a onclick="toggleCustomForm()">Lo studente non compare nell'elenco? Aggiungilo manualmente</a>
+      </div>
+
+      <div class="custom-form" id="custom-form">
+        <h4>
+          <svg style="width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2" viewBox="0 0 24 24">
+            <path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/>
+            <line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/>
+          </svg>
+          Aggiunta studente non in elenco
+        </h4>
+        <div class="field">
+          <input type="text" id="custom-name" placeholder="Nome e cognome (es. Rossi Mario)" autocomplete="off">
+        </div>
+        <div class="field">
+          <label class="checkbox">
+            <input type="checkbox" id="custom-3plays">
+            <span>Attiva 3 ascolti (BES/DSA · misure compensative)</span>
+          </label>
+          <div class="helper">Se attivato, verrà anche letta a voce ciascuna domanda con le opzioni.</div>
+        </div>
+        <div class="row-btns">
+          <button class="btn-confirm" onclick="addCustomStudent()">
+            <svg style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+            Conferma e prosegui
+          </button>
+          <button class="btn-cancel" onclick="toggleCustomForm()">Annulla</button>
+        </div>
+      </div>
+
       <div class="btn-row">
         <div></div>
         <button class="btn btn-red" id="btn-start" onclick="startTest()" disabled>
@@ -757,6 +903,12 @@
         <p style="margin-bottom:18px;color:var(--grigio);font-style:italic">
           Read the text and fill in the 5 blanks. Choose one option per blank — one option will not be used.
         </p>
+        <button class="btn-tts-bears" onclick="ttsRead('bears', null, this)" type="button">
+          <svg style="width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2" viewBox="0 0 24 24">
+            <path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07"/>
+          </svg>
+          Read the text aloud
+        </button>
         <div class="bears-block">
           <div class="bears-text">
             <h4>BROWN BEARS</h4>
@@ -805,45 +957,15 @@
   </section>
 
   <!-- ========== SCREEN 5 · RESULTS ========== -->
+  <!-- ========== SCREEN 5 · ATTIVITÀ COMPLETATA ========== -->
   <section id="screen-5" class="screen">
-    <div class="card">
-      <h2 class="step-title"><span class="step-num">5</span> Results</h2>
-
-      <div class="result-banner">
-        <div class="result-label">Total score</div>
-        <div class="result-score"><span id="score-final">0</span><span class="total">/26</span></div>
-        <div class="result-msg" id="result-msg">Well done!</div>
-        <div class="sub-scores">
-          <div class="sub-score"><span class="lbl">Ex.1</span><span class="val"><span id="score-ex1">0</span>/5</span></div>
-          <div class="sub-score"><span class="lbl">Ex.2</span><span class="val"><span id="score-ex2">0</span>/6</span></div>
-          <div class="sub-score"><span class="lbl">Ex.3</span><span class="val"><span id="score-ex3">0</span>/15</span></div>
-        </div>
-      </div>
-
-      <div id="review-container"></div>
-
-      <div class="btn-row">
-        <button class="btn btn-secondary" onclick="window.print()">
-          <svg class="ic" viewBox="0 0 24 24"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v8H6z"/></svg>
-          Print
-        </button>
-        <button class="btn btn-primary" onclick="location.reload()">
-          New test
-          <svg class="ic" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1018-9 9 9 0 00-9 9zM3 4v5h5"/></svg>
-        </button>
-      </div>
-    </div>
-  </section>
-
-  <!-- ========== SCREEN 6 · THANK YOU ========== -->
-  <section id="screen-6" class="screen">
     <div class="card" style="text-align:center;padding:60px 32px">
       <svg width="90" height="90" viewBox="0 0 24 24" fill="none" stroke="#012169" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:22px">
         <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
       </svg>
-      <h2 style="color:var(--uk-blue);font-size:1.9rem;margin-bottom:14px;font-family:'EB Garamond',serif">Test submitted</h2>
+      <h2 style="color:var(--uk-blue);font-size:1.9rem;margin-bottom:14px;font-family:'EB Garamond',serif">Attività completata</h2>
       <p style="font-size:1.1rem;color:var(--grigio);max-width:520px;margin:0 auto 22px">
-        Your test has been recorded successfully. Please wait for your teacher's feedback.
+        La tua prova è stata registrata correttamente. Puoi chiudere questa pagina.
       </p>
       <div style="font-family:'EB Garamond',serif;font-style:italic;color:var(--grigio);font-size:1.05rem">
         — Thank you for your work —
@@ -872,9 +994,6 @@
    ============================================================ */
 const CONFIG = {
 
-  // 'studente' = review visibile; 'docente' = solo conferma invio
-  modalita: 'studente',
-
   // Endpoint Apps Script (vuoto = disattivato)
   endpointAppsScript: 'https://script.google.com/macros/s/AKfycbzJ9WtdyzjUT-lCRfQtxt2J4UiAwePIXc5XqV6XVfhSetbM-rpeawKpGN1hLVzWCTiP6A/exec',
 
@@ -886,14 +1005,14 @@ const CONFIG = {
 
   // ID YouTube degli audio
   audio: {
-    1: '89Y-ASL5ntI',
-    2: 'XkmtsznlSiU'
+    1: 'xE-lBlWA8F0',  // Birthday Party
+    2: '0yHh9GphMr4'   // Pet Discussion
   },
 
-  // ⚠️ RISPOSTE CORRETTE — Ex1/Ex2 IPOTIZZATE da contesto (verifica ascoltando)
+  // ⚠️ RISPOSTE CORRETTE (confermate da Andrea)
   rispostecorrette: {
-    ex1: { 1:'E', 2:'A', 3:'B', 4:'F', 5:'C' },   // E:10th October, A:park, B:4:30, F:T-shirt, C:tomorrow (D:5:30 avanza)
-    ex2: { 1:'B', 2:'D', 3:'B', 4:'A', 5:'C', 6:'D' },  // Sam, rabbit, four babies, small, run after mice, live in a cage
+    ex1: { 1:'E', 2:'A', 3:'D', 4:'F', 5:'C' },   // E:10th October, A:park, D:5:30, F:T-shirt, C:tomorrow (B:4:30 avanza)
+    ex2: { 1:'B', 2:'B', 3:'C', 4:'A', 5:'C', 6:'D' },  // Sam, dog, six babies, small, run after mice, live in a cage
     ex3: {
       1:'B',   // Sit down!
       2:'D',   // Can I close the window, please?
@@ -1093,7 +1212,130 @@ function resetStudent() {
   document.getElementById('student-search').value = '';
   document.getElementById('student-search').focus();
   document.getElementById('student-selected-box').style.display = 'none';
+  document.getElementById('add-custom-link').style.display = '';
+  document.getElementById('custom-form').classList.remove('open');
   document.getElementById('btn-start').disabled = true;
+}
+
+/* ============================================================
+   AGGIUNTA STUDENTE CUSTOM
+   ============================================================ */
+function toggleCustomForm() {
+  const form = document.getElementById('custom-form');
+  const link = document.getElementById('add-custom-link');
+  if (form.classList.contains('open')) {
+    form.classList.remove('open');
+    link.style.display = '';
+  } else {
+    form.classList.add('open');
+    link.style.display = 'none';
+    setTimeout(() => document.getElementById('custom-name').focus(), 200);
+  }
+}
+
+function addCustomStudent() {
+  const name = document.getElementById('custom-name').value.trim();
+  if (!name) {
+    alert('Inserisci nome e cognome.');
+    document.getElementById('custom-name').focus();
+    return;
+  }
+  if (name.length < 3) {
+    alert('Nome troppo corto (minimo 3 caratteri).');
+    return;
+  }
+  const threePlays = document.getElementById('custom-3plays').checked;
+  selectStudent(name, threePlays ? 3 : 2);
+  // Reset form
+  document.getElementById('custom-name').value = '';
+  document.getElementById('custom-3plays').checked = false;
+  document.getElementById('custom-form').classList.remove('open');
+}
+
+/* ============================================================
+   TEXT-TO-SPEECH (per studenti BES/DSA con 3 ascolti)
+   ============================================================ */
+let currentSpeakingBtn = null;
+
+function speakEN(text, btnEl) {
+  if (!window.speechSynthesis) {
+    console.warn('SpeechSynthesis non supportato');
+    return;
+  }
+  // Cancella eventuale lettura in corso
+  window.speechSynthesis.cancel();
+  if (currentSpeakingBtn) {
+    currentSpeakingBtn.classList.remove('speaking');
+    currentSpeakingBtn = null;
+  }
+
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.lang = 'en-GB';
+  utt.rate = 0.85;
+  utt.pitch = 1;
+
+  // Preferenza voci inglesi se disponibili
+  const voices = window.speechSynthesis.getVoices();
+  const ukVoice = voices.find(v => v.lang === 'en-GB') || voices.find(v => v.lang.startsWith('en'));
+  if (ukVoice) utt.voice = ukVoice;
+
+  if (btnEl) {
+    btnEl.classList.add('speaking');
+    currentSpeakingBtn = btnEl;
+    utt.onend = () => {
+      btnEl.classList.remove('speaking');
+      if (currentSpeakingBtn === btnEl) currentSpeakingBtn = null;
+    };
+    utt.onerror = utt.onend;
+  }
+
+  window.speechSynthesis.speak(utt);
+}
+
+function ttsRead(exType, qNum, btnEl) {
+  let text = '';
+  if (exType === 'ex1') {
+    text = CONFIG.domandeEx1[qNum] + '. The available options are: '
+         + Object.values(CONFIG.opzioniEx1).join('. ') + '.';
+  } else if (exType === 'ex2') {
+    const dq = CONFIG.domandeEx2[qNum];
+    text = dq.testo + '. ' + readMcOptions(STATE.shuffleMap.ex2[qNum], dq.opt);
+  } else if (exType === 'ex3A') {
+    const dq = CONFIG.ex3_secA[qNum];
+    text = dq.testo + '. ' + readMcOptions(STATE.shuffleMap.ex3A[qNum], dq.opt);
+  } else if (exType === 'ex3B') {
+    const dq = CONFIG.ex3_secB[qNum];
+    text = dq.testo + '. ' + readMcOptions(STATE.shuffleMap.ex3B[qNum], dq.opt);
+  } else if (exType === 'bears') {
+    text = 'Brown Bears. '
+         + 'Brown bears are blank one. They live in mountain forests and valleys of North America, Europe and Asia. '
+         + 'They sleep in blank two. '
+         + 'Brown bears can be 2.3 meters long and weight up to blank three. '
+         + 'They have round ears, long claws and blank four. '
+         + 'Brown bears can have different colours, too. They can be blank five. '
+         + 'Females are smaller than the males. '
+         + 'The available options for the blanks are: '
+         + Object.values(CONFIG.opzioniBears).join('. ') + '.';
+  }
+  speakEN(text, btnEl);
+}
+
+function readMcOptions(shuffleArr, optMap) {
+  // Legge le opzioni nell'ordine displayed A/B/C/D
+  const labels = ['A','B','C','D'];
+  let s = 'The options are: ';
+  shuffleArr.forEach((origL, i) => {
+    s += 'Option ' + labels[i] + ': ' + optMap[origL] + '. ';
+  });
+  return s;
+}
+
+function stopTts() {
+  if (window.speechSynthesis) window.speechSynthesis.cancel();
+  if (currentSpeakingBtn) {
+    currentSpeakingBtn.classList.remove('speaking');
+    currentSpeakingBtn = null;
+  }
 }
 
 /* ============================================================
@@ -1231,6 +1473,7 @@ function renderDots(n) {
    NAVIGAZIONE
    ============================================================ */
 function goToScreen(n) {
+  stopTts();
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById('screen-' + n).classList.add('active');
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1238,6 +1481,14 @@ function goToScreen(n) {
 
 function startTest() {
   if (!STATE.studente) return;
+
+  // Attiva TTS solo per studenti con 3 ascolti (BES/DSA)
+  if (STATE.studente.plays === 3) {
+    document.body.classList.add('tts-enabled');
+  } else {
+    document.body.classList.remove('tts-enabled');
+  }
+
   renderDots(1);
   renderDots(2);
   goToScreen(2);
@@ -1271,6 +1522,9 @@ function buildEx1() {
     html += `
       <div class="q-match">
         <div class="q-num">${q}</div>
+        <button class="btn-tts" onclick="ttsRead('ex1', ${q}, this)" title="Ascolta la domanda">
+          <svg viewBox="0 0 24 24"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07"/></svg>
+        </button>
         <div class="q-text">${CONFIG.domandeEx1[q]}</div>
         <select data-ex="1" data-q="${q}">
           <option value="">— choose —</option>
@@ -1297,6 +1551,9 @@ function buildEx2() {
         <div class="q-mc-head">
           <div class="q-num">${q}</div>
           <div class="q-text">${dq.testo}</div>
+          <button class="btn-tts" onclick="ttsRead('ex2', ${q}, this)" title="Ascolta la domanda">
+            <svg viewBox="0 0 24 24"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07"/></svg>
+          </button>
         </div>
         <div class="mc-options">
           ${['A','B','C','D'].map((displayedL, i) => {
@@ -1331,6 +1588,9 @@ function buildEx3() {
         <div class="q-mc-head">
           <div class="q-num">${q}</div>
           <div class="q-text">${dq.testo}</div>
+          <button class="btn-tts" onclick="ttsRead('ex3A', ${q}, this)" title="Ascolta la domanda">
+            <svg viewBox="0 0 24 24"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07"/></svg>
+          </button>
         </div>
         <div class="q-mc-image"><img src="${CONFIG.imagesBase}${dq.img}" alt="Question ${q}"></div>
         <div class="mc-options">
@@ -1362,6 +1622,9 @@ function buildEx3() {
         <div class="q-mc-head">
           <div class="q-num">${q}</div>
           <div class="q-text">${dq.testo}</div>
+          <button class="btn-tts" onclick="ttsRead('ex3B', ${q}, this)" title="Ascolta la domanda">
+            <svg viewBox="0 0 24 24"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07"/></svg>
+          </button>
         </div>
         <div class="mc-options">
           ${['A','B','C','D'].map((displayedL, i) => {
@@ -1379,7 +1642,7 @@ function buildEx3() {
   }
   secB.innerHTML = htmlB;
 
-  // Sezione C (Brown Bears) — shuffle ordine dropdown
+  // Sezione C (Brown Bears) — shuffle ordine dropdown + pulsante TTS testo
   document.getElementById('img-bears').src = CONFIG.imagesBase + CONFIG.ex3_secC_img;
   STATE.shuffleMap.ex3C = shuffle(['A','B','C','D','E','F']);
   const opzioniBearsHtml = STATE.shuffleMap.ex3C
@@ -1413,13 +1676,7 @@ function submitTest() {
 
   const result = calcola();
   inviaDati(result);
-
-  if (CONFIG.modalita === 'docente') {
-    goToScreen(6);
-  } else {
-    mostraRisultati(result);
-    goToScreen(5);
-  }
+  goToScreen(5);
 }
 
 function checkIncomplete() {
@@ -1457,75 +1714,6 @@ function calcola() {
   }
 
   return { punti: p1+p2+p3, p1, p2, p3, totale: 26, dettaglio };
-}
-
-function mostraRisultati(R) {
-  document.getElementById('score-final').textContent = R.punti;
-  document.getElementById('score-ex1').textContent = R.p1;
-  document.getElementById('score-ex2').textContent = R.p2;
-  document.getElementById('score-ex3').textContent = R.p3;
-
-  const perc = (R.punti / R.totale) * 100;
-  let msg;
-  if      (perc >= 90) msg = 'Outstanding work — excellent English skills.';
-  else if (perc >= 75) msg = 'Very good performance. Keep it up.';
-  else if (perc >= 60) msg = 'Good effort. A few details to polish.';
-  else if (perc >= 40) msg = 'Promising start — practice makes perfect.';
-  else                 msg = 'Take your time — English is a skill you can train.';
-  document.getElementById('result-msg').textContent = msg;
-
-  const container = document.getElementById('review-container');
-  let html = '';
-
-  // EX1
-  html += '<div class="review-section"><h3>Exercise 1 · Birthday Party (Listening)</h3>';
-  R.dettaglio.ex1.forEach(r => {
-    const corretta = r.corretta ? CONFIG.opzioniEx1[r.corretta] || '—' : '—';
-    const datata = r.data ? CONFIG.opzioniEx1[r.data] || '—' : '— no answer';
-    html += renderReviewItem(r, CONFIG.domandeEx1[r.q], datata, corretta);
-  });
-  html += '</div>';
-
-  // EX2
-  html += '<div class="review-section"><h3>Exercise 2 · Pet Discussion (Listening)</h3>';
-  R.dettaglio.ex2.forEach(r => {
-    const opz = CONFIG.domandeEx2[r.q].opt;
-    const corretta = r.corretta ? `${r.corretta} · ${opz[r.corretta] || '—'}` : '—';
-    const datata = r.data ? `${r.data} · ${opz[r.data] || '—'}` : '— no answer';
-    html += renderReviewItem(r, CONFIG.domandeEx2[r.q].testo, datata, corretta);
-  });
-  html += '</div>';
-
-  // EX3
-  html += '<div class="review-section"><h3>Exercise 3 · Reading Comprehension</h3>';
-  R.dettaglio.ex3.forEach(r => {
-    let testo, opz;
-    if (r.q <= 5)      { testo = CONFIG.ex3_secA[r.q].testo; opz = CONFIG.ex3_secA[r.q].opt; }
-    else if (r.q <= 10){ testo = CONFIG.ex3_secB[r.q].testo; opz = CONFIG.ex3_secB[r.q].opt; }
-    else               { testo = 'Brown bears — blank ' + (r.q - 10); opz = CONFIG.opzioniBears; }
-    const corretta = r.corretta ? `${r.corretta} · ${opz[r.corretta] || '—'}` : '—';
-    const datata = r.data ? `${r.data} · ${opz[r.data] || '—'}` : '— no answer';
-    html += renderReviewItem(r, testo, datata, corretta);
-  });
-  html += '</div>';
-
-  container.innerHTML = html;
-}
-
-function renderReviewItem(r, testo, datata, corretta) {
-  return `
-    <div class="review-item ${r.ok ? 'correct' : 'wrong'}">
-      <div class="review-icon">
-        ${r.ok
-          ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>'
-          : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 6L6 18M6 6l12 12"/></svg>'}
-      </div>
-      <div class="review-q"><strong>Q${r.q}.</strong> ${testo}</div>
-      <div class="review-ans">
-        ${r.ok ? `<span class="corr">${corretta}</span>` :
-          `<span class="your">${datata}</span><span class="corr">→ ${corretta}</span>`}
-      </div>
-    </div>`;
 }
 
 /* ============================================================
